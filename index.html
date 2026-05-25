@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ValidResult Evaluation</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <link data-trunk rel="rust" data-wasm-opt="z" />
+    <link data-trunk rel="tailwind-css" href="input.css" />
+</head>
+<body class="font-sans h-screen flex overflow-hidden" style="background:#131627; color:#c8d8f0;">
+
+<aside style="width:256px; background:#0f1219; border-right:3px solid #11326c; flex-shrink:0;" class="flex flex-col justify-between md:flex">
+    <div>
+        <div style="height:64px; display:flex; align-items:center; padding:0 24px; border-bottom:3px solid #1e3a6e;">
+            <span style="font-size:18px; font-weight:700; color:#e2e8f0; font-family:'JetBrains Mono',monospace;">
+                <span style="color:#4a9eff;">ValidResult</span>
+            </span>
+        </div>
+        <nav style="padding:16px; display:flex; flex-direction:column; gap:4px;">
+            <a href="#" style="display:flex; align-items:center; padding:8px 12px; font-size:13px; font-weight:600; background:#1e2433; color:#4a9eff; border-radius:6px; border:1px solid #1e3a6e; text-decoration:none;">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Рейтинг моделей
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<main class="flex-1 flex flex-col h-full overflow-hidden">
+
+    <header style="height:64px; background:#0f1219; border-bottom:3px solid #1e3a6e; display:flex; align-items:center; justify-content:space-between; padding:0 24px; flex-shrink:0;">
+        <h1 style="font-size:15px; font-weight:600; color:#e2e8f0; font-family:'JetBrains Mono',monospace;">Интегральная оценка (MVP)</h1>
+        <div style="display:flex; gap:12px; align-items:center; flex-shrink:0;">
+            <div id="add-mount" style="width: 180px; height: 40px;"></div>
+            <div id="list-mount" style="width: 180px; height: 40px;"></div>
+        </div>
+    </header>
+
+    <div class="flex-1 overflow-auto space-y-4" style="padding:24px;">
+
+        <div style="background:#0f1219; border:3px solid #1e3a6e; border-radius:6px;">
+            <div id="table-mount"></div>
+        </div>
+
+        <div style="background:#0f1219; border:3px solid #1e3a6e; border-radius:6px;">
+            <div id="chat-mount"></div>
+        </div>
+
+    </div>
+</main>
+
+</body>
+</html>

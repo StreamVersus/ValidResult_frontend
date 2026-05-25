@@ -1,0 +1,12 @@
+# Build output
+dist/
+target/
+
+# Dependencies
+node_modules/
+
+# Lock files
+package-lock.json
+package.json
+
+.idea/

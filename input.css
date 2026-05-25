@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+
+    --color-bg-base: #131627;
+    --color-text-base: #c8d8f0;
+    --color-accent: #4a9eff;
+}
+
+.ai-message * {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    min-width: 0;
+    max-width: 100%;
+}
+.ai-message table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 12px; }
+.ai-message th, .ai-message td { border: 1px solid #2d3748; padding: 4px 8px; text-align: left; }
+.ai-message th { background: #1a2035; color: #94a3b8; }
+.ai-message tr:nth-child(even) { background: #151c2c; }
+
+@layer components {
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #0a0f2e;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1e3a6e;
+        border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #2563eb;
+    }
+
+    * {
+        scrollbar-color: #1e3a6e #0a0f2e;
+    }
+
+    header .curvy-newt-container {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        background-color: #11326c;
+        border: 1px solid #3b82f6;
+        border-radius: 8px;
+
+        font-family: 'JetBrains Mono', monospace;
+        text-transform: uppercase;
+        transition: all 0.2s ease-in-out;
+        z-index: 10;
+    }
+
+    header .curvy-newt-container:hover {
+        background-color: #1d4ed8;
+        border-color: #60a5fa;
+    }
+
+    header #list-mount .curvy-newt-container[data-open="true"] {
+        background-color: #151c2c;
+        border-color: #4a9eff;
+        border-radius: 8px 8px 0 0;
+        box-shadow: 0 0 12px rgba(74, 158, 255, 0.3);
+        z-index: 9999;
+    }
+
+    header .curvy-newt-btn {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+
+        width: 100%;
+        height: 100%;
+        padding: 0 16px 0 20px;
+
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        color: #ffffff;
+
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+    header #list-mount .curvy-newt-container[data-open="true"] .curvy-newt-btn {
+        color: #4a9eff;
+    }
+
+    header .curvy-newt-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: absolute;
+
+        left: -1px;
+        width: calc(100% + 2px);
+        top: 100%;
+        height: auto;
+
+        background-color: #151c2c;
+        border: 1px solid #4a9eff;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        z-index: 9999;
+
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    header .curvy-newt-menu-inner {
+        width: 100%;
+        padding: 4px 0 6px 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    header .curvy-newt-item {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        width: 100%;
+        padding: 10px 16px 10px 20px;
+
+        color: #c8d8f0;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 500;
+        font-size: 13px;
+
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    header .curvy-newt-item:hover {
+        background-color: #1e293b;
+        color: #4a9eff;
+        padding-left: 24px;
+    }
+
+    header .curvy-newt-item[data-selected="true"] {
+        background-color: #2563eb;
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    header .curvy-newt-arrow {
+        color: #ffffff;
+        width: 16px;
+        height: 16px;
+        margin-left: auto;
+        flex-shrink: 0;
+        transition: transform 0.2s ease;
+    }
+
+    header .curvy-newt-container[data-open="true"] .curvy-newt-arrow {
+        color: #4a9eff;
+        transform: rotate(180deg);
+    }
+}

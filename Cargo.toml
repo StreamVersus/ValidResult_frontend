@@ -1,0 +1,16 @@
+[package]
+name = "leptos-dense-table"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+leptos = { version = "0.8.19", features = ["csr"] }
+gloo-net = { version = "0.7", features = ["http", "json"] }
+console_error_panic_hook = "0.1.7"
+serde = { version = "1.0", default-features = false, features = ["alloc", "derive"] }
+leptos-use = "0.18.3"
+web-sys = "0.3.98"
+
+[profile.release]
+opt-level = 'z'
+lto = true
