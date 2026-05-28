@@ -4,85 +4,92 @@ mod metric_list;
 mod agent;
 mod sort_button;
 mod add_metrics;
+mod chart;
+mod charts_route;
+mod metric_page;
+mod navbar;
+mod bench_hist;
 
-use std::future::Future;
-use std::pin::Pin;
+use crate::add_metrics::AddMetrics;
+use crate::backend::{pull_from_backend, MetricType};
+use crate::charts_route::ChartsRoute;
+use crate::metric_list::MetricList;
+use crate::metric_page::MetricRoute;
 use leptos::prelude::*;
 use leptos::server::codee::string::FromToStringCodec;
 use leptos::wasm_bindgen::JsCast;
+use leptos_router::components::{Route, Router, Routes};
+use leptos_router::hooks::use_location;
+use leptos_router::path;
 use leptos_use::use_cookie;
 use table::{CellData, DenseTable};
-use crate::add_metrics::AddMetrics;
-use crate::agent::AiChat;
-use crate::backend::{ai_agent_turn, pull_from_backend, MetricType};
-use crate::metric_list::MetricList;
+use crate::navbar::Navbar;
+
+#[component]
+fn RouteSyncer(set_active_route: WriteSignal<String>) -> impl IntoView {
+    let loc = use_location();
+    Effect::new(move |_| {
+        set_active_route.set(loc.pathname.get());
+    });
+    view! {}
+}
 
 fn main() {
     console_error_panic_hook::set_once();
 
     let (metric_type, set_metric_type) = signal::<MetricType>(MetricType::LLM);
-    let (session_id, set_session_id) = signal::<Option<String>>(None);
     let (cookie_refresh, set_cookie_refresh) = signal(0usize);
-    let cookie_name = Signal::derive(move || format!("user_models_{:?}", metric_type.get()));
+
+    let (active_route, set_active_route) = signal(String::from("/"));
 
     mount_to(
-        document()
-            .get_element_by_id("table-mount")
-            .unwrap()
-            .unchecked_into(),
-        move || view! {
-            <TableLoader
-                metric_type=metric_type
-                trigger_refresh=cookie_refresh
-                cookie_name=cookie_name
-            />
+        document().get_element_by_id("app-mount").unwrap().unchecked_into(),
+        {
+            let set_active_route = set_active_route;
+            move || view! {
+                <Router>
+                    <RouteSyncer set_active_route />
+                    <Routes fallback=|| "Not found.">
+                        <Route
+                            path=path!("")
+                            view=move || {
+                                view! { <MetricRoute metric_type trigger_refresh=cookie_refresh /> }
+                            }
+                        />
+                        <Route
+                            path=path!("/ml")
+                            view=move || view! { <ChartsRoute metric_type /> }
+                        />
+                    </Routes>
+                </Router>
+            }
         },
     ).forget();
 
     mount_to(
-        document()
-            .get_element_by_id("chat-mount")
-            .unwrap()
-            .unchecked_into(),
-        move || view! {
-            <AiChat on_send=Callback::new(move |(user_message, embed)| {
-                let (cookie, _) = use_cookie::<
-                    String,
-                    FromToStringCodec,
-                >(&cookie_name.get_untracked());
-                let mt = metric_type.get_untracked();
-                let session_id = session_id.get_untracked();
-                let user_metrics = cookie.get_untracked().unwrap_or_default();
-                Box::pin(async move {
-                    let (response, id) = ai_agent_turn(
-                            user_message,
-                            embed,
-                            mt,
-                            session_id,
-                            user_metrics,
-                        )
-                        .await;
-                    set_session_id.set(Some(id));
-                    response
-                }) as Pin<Box<dyn Future<Output = String>>>
-            }) />
+        document().get_element_by_id("nav-mount").unwrap().unchecked_into(),
+        move || view! { <Navbar /> },
+    ).forget();
+
+    mount_to(
+        document().get_element_by_id("add-mount").unwrap().unchecked_into(),
+        {
+            let active_route = active_route;
+            move || {
+                let is_ml_route = Memo::new(move |_| active_route.get() == "/ml");
+
+                view! {
+                    <Show when=move || !is_ml_route.get()>
+                        <AddMetrics set_trigger_refresh=set_cookie_refresh />
+                    </Show>
+                }
+            }
         },
     ).forget();
 
     mount_to(
-        document()
-            .get_element_by_id("add-mount")
-            .unwrap()
-            .unchecked_into(),
-        move || view! { <AddMetrics set_trigger_refresh=set_cookie_refresh /> },
-    ).forget();
-
-    mount_to(
-        document()
-            .get_element_by_id("list-mount")
-            .unwrap()
-            .unchecked_into(),
-        move || view! { <MetricList metric_type=metric_type set_metric_type=set_metric_type /> },
+        document().get_element_by_id("list-mount").unwrap().unchecked_into(),
+        move || view! { <MetricList metric_type set_metric_type /> },
     ).forget();
 }
 
@@ -122,7 +129,16 @@ fn TableLoader(
     trigger_refresh: ReadSignal<usize>,
     cookie_name: Signal<String>,
 ) -> impl IntoView {
-    let backend_csv = LocalResource::new(move || pull_from_backend(metric_type.get()));
+    let backend_csv = LocalResource::new(move || {
+        let current_type = metric_type.get();
+
+        async move {
+            pull_from_backend(current_type).await.unwrap_or_else(|e| {
+                tracing::warn!("Fetch failed, cycle continues: {e}");
+                String::new()
+            })
+        }
+    });
 
     view! {
         <Suspense fallback=move || {
@@ -162,17 +178,17 @@ fn TableLoader(
                             }
                         });
 
-                    view! {
-                        <DenseTable
-                            headers=headers
-                            rows=rows
-                            user_rows=user_rows
-                            on_delete_user_row=on_delete_user_row
-                            freeze_first_col=true
-                            show_row_numbers=true
-                        />
-                    }
-                })
+                        view! {
+                            <DenseTable
+                                headers=headers
+                                rows=rows
+                                user_rows=user_rows
+                                on_delete_user_row=on_delete_user_row
+                                freeze_first_col=true
+                                show_row_numbers=true
+                            />
+                        }
+                    })
             }}
         </Suspense>
     }

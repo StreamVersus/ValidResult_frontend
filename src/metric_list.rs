@@ -4,7 +4,7 @@ use crate::backend::MetricType;
 #[component]
 pub fn MetricList(
     metric_type: ReadSignal<MetricType>,
-    set_metric_type: WriteSignal<MetricType>
+    set_metric_type: WriteSignal<MetricType>,
 ) -> impl IntoView {
     let (is_open, set_open) = signal(false);
     let mock_metrics: Vec<String> = MetricType::ALL.iter().map(|t| t.to_string()).collect();

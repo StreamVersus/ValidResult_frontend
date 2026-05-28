@@ -8,6 +8,8 @@ const BACKEND_ADDRESS: &str = "https://oheaven.ru";
 pub enum MetricType {
     LLM,
     CV,
+    CVML,
+    LLMML,
 }
 
 impl Display for MetricType {
@@ -15,18 +17,31 @@ impl Display for MetricType {
         match self {
             MetricType::LLM => write!(f, "LLM"),
             MetricType::CV => write!(f, "CV"),
+            MetricType::CVML => write!(f, "CVML"),
+            MetricType::LLMML => write!(f, "LLMML"),
         }
     }
 }
 
 impl MetricType {
     pub const ALL: [Self; 2] = [Self::LLM, Self::CV];
+    pub const ALL_ML: [Self; 2] = [Self::LLMML, Self::CVML];
 
     pub fn from_str(string: &str) -> MetricType {
         match string {
             "LLM" => MetricType::LLM,
             "CV" => MetricType::CV,
+            "CVML" => MetricType::CVML,
+            "LLMML" => MetricType::LLMML,
             _ => unimplemented!(),
+        }
+    }
+
+    pub fn to_ml(self) -> Self {
+        match self {
+            MetricType::LLM => MetricType::LLMML,
+            MetricType::CV => MetricType::CVML,
+            _ => self
         }
     }
 
@@ -71,24 +86,24 @@ impl MetricType {
                 "Устойчивость к разрешению",
                 "Скорость инференса",
             ],
+            _ => unimplemented!(),
         }
     }
 }
 
-pub async fn pull_from_backend(metric_type: MetricType) -> String {
+pub async fn pull_from_backend(metric_type: MetricType) -> Result<String, String> {
     let url = format!(
         "{}/metrics?request_type={}",
         BACKEND_ADDRESS,
         metric_type.to_string().to_lowercase()
     );
 
-    Request::get(&url)
+    let response = Request::get(&url)
         .send()
         .await
-        .expect("Failed to fetch metrics")
-        .text()
-        .await
-        .expect("Failed to parse metrics text")
+        .map_err(|e| format!("Request failed: {e}"))?;
+
+    response.text().await.map_err(|e| format!("Failed to read response: {e}"))
 }
 
 #[derive(Deserialize)]

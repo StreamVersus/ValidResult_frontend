@@ -10,6 +10,8 @@ console_error_panic_hook = "0.1.7"
 serde = { version = "1.0", default-features = false, features = ["alloc", "derive"] }
 leptos-use = "0.18.3"
 web-sys = "0.3.98"
+leptos_router = "0.8.13"
+tracing = "0.1.44"
 
 [profile.release]
 opt-level = 'z'

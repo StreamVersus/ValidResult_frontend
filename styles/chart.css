@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+@layer components {
+    .chart-container {
+        position: relative;
+        display: inline-block;
+        user-select: none;
+    }
+
+    .chart-svg {
+        overflow: visible;
+        display: block;
+    }
+
+    .chart-bg {
+        fill: #1e3a6e;
+    }
+
+    .chart-grid-line {
+        stroke: #4A9EFF;
+        stroke-width: 1px;
+    }
+
+    .chart-plot-border {
+        fill: none;
+        stroke: #4b5563;
+        stroke-width: 1px;
+    }
+
+    .chart-axis-tick {
+        stroke: #9ca3af;
+        stroke-width: 1px;
+    }
+
+    .chart-axis-label {
+        font-size: 11px;
+        fill: #ffffff;
+        text-anchor: middle;
+    }
+
+    .chart-axis-label-y {
+        text-anchor: end;
+    }
+
+    .chart-axis-title {
+        font-size: 12px;
+        font-weight: 600;
+        fill: #ffffff;
+        text-anchor: middle;
+    }
+
+    .chart-series-line {
+        fill: none;
+        stroke-width: 2px;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+    }
+
+    .chart-point-shape {
+        stroke: white;
+        stroke-width: 2px;
+    }
+
+    .chart-point-group {
+        cursor: pointer;
+    }
+
+    .chart-glow-halo {
+        opacity: 0.15;
+    }
+
+    .chart-glow-ring {
+        fill: none;
+        stroke-width: 2px;
+        stroke-dasharray: 3 2.5;
+        opacity: 0.6;
+    }
+
+    .chart-legend-text {
+        font-size: 11px;
+        fill: #ffffff;
+    }
+
+    .chart-tooltip {
+        position: absolute;
+        background: rgba(16, 18, 38, 0.96);
+        color: #ffffff;
+        padding: 9px 13px;
+        border-radius: 7px;
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 12px;
+        pointer-events: none;
+        z-index: 10;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+        line-height: 1.75;
+        min-width: 130px;
+        backdrop-filter: blur(4px);
+    }
+
+    .chart-tooltip-header {
+        font-weight: 700;
+        font-size: 13px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        padding-bottom: 4px;
+        margin-bottom: 5px;
+        letter-spacing: 0.02em;
+        color: #ffffff;
+    }
+
+    .chart-tooltip-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .chart-tooltip-key {
+        color: #9ca3af;
+        font-size: 11px;
+    }
+
+    .chart-tooltip-value {
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .chart-tooltip-extra {
+        color: #9ca3af;
+        font-size: 11px;
+        margin-top: 4px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 4px;
+    }
+
+    .chart-sync-line {
+        stroke: #4a9eff;
+        stroke-width: 1px;
+        stroke-dasharray: 4 3;
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}

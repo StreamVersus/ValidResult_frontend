@@ -154,8 +154,7 @@ pub fn AddMetrics(set_trigger_refresh: WriteSignal<usize>) -> impl IntoView {
                                     }
                                 />
                             </div>
-                        </div>
-                        {} <div>
+                        </div> {} <div>
                             <label class="block text-sm text-gray-400 mb-2">Метрики</label>
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-64 overflow-y-auto pr-1">
                                 {move || {
